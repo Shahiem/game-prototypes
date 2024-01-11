@@ -1,0 +1,11 @@
+@import "./vars";
+
+body {
+  margin: 0;
+}
+
+canvas, #app {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
