@@ -32,7 +32,7 @@ export default class Character extends Entity {
     const manifest = {
       bundles: [
         {
-          name: 'load-screen',
+          name: 'idle',
           assets: [
             { alias: 'background', src: 'assets/character/idle/sprite.png' },
             { alias: 'json', src: 'assets/character/idle/sprite.json' },
@@ -45,7 +45,7 @@ export default class Character extends Entity {
   }
 
   async draw(stage: any) {
-    await Assets.loadBundle('load-screen');
+    await Assets.loadBundle('idle');
 
     const baseTexture = BaseTexture.from('background');
     const frames = [
