@@ -22,8 +22,8 @@ export default class Play extends Scene {
     const character = new Character();
     const npc = new NPC();
 
-    // GameEnvironment.getGame().entityManager.add(character);
-    GameEnvironment.getGame().entityManager.add(npc);
+    GameEnvironment.getGame().entityManager.add(character);
+    // GameEnvironment.getGame().entityManager.add(npc);
 
     GameEnvironment.getGame().tilemapManager.createTiles(GameEnvironment.getGame().viewportManager.cameraContainer);
 

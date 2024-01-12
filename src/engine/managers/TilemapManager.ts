@@ -1,4 +1,3 @@
-// Tilemap.ts
 import * as PIXI from 'pixi.js';
 
 export default class TilemapManager {
@@ -18,7 +17,7 @@ export default class TilemapManager {
 
       for (let col = 0; col < this.matrix[row].length; col++) {
         const tileValue = this.matrix[row][col];
-        
+
         const tile = this.createTile(tileValue, this.tileSize);
         tile.position.set(col * this.tileSize, row * this.tileSize);
         stage.addChild(tile);

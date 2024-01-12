@@ -1,16 +1,21 @@
 import GameEnvironment from '../GameEnvironment';
 import Entity from './Entity';
-import { Assets, AnimatedSprite, Rectangle, Texture, BaseTexture } from 'pixi.js';
+import Bullet from './Bullet';
+import { Assets, AnimatedSprite, Sprite, Rectangle, Container, Texture, BaseTexture } from 'pixi.js';
 
 export default class Character extends Entity {
+
+  // TODO: Change typing
+  private bullets: any[] = [];
   private keys: { [key: string]: boolean } = {};
   private sprite: any;
-  private x: number = 0;
-  private y: number = 0;
   private walkingSpeed: number = 5;
 
   constructor() {
     super();
+
+    // TODO: Move to main class
+    window.addEventListener('click', this.handleMouseClick.bind(this));
 
     this.setupKeyboardListeners();
   }
@@ -38,13 +43,20 @@ export default class Character extends Entity {
             { alias: 'json', src: 'assets/character/idle/sprite.json' },
           ],
         },
+        {
+          name: 'weapon',
+          assets: [
+            { alias: 'background', src: 'assets/character/weapon/sprite.png' },
+          ],
+        },
       ],
     };
 
     await Assets.init({ manifest });
   }
 
-  async draw(stage: any) {
+  async draw(stage: Container) {
+    // TODO: Cleanup, just a  test
     await Assets.loadBundle('idle');
 
     const baseTexture = BaseTexture.from('background');
@@ -57,8 +69,23 @@ export default class Character extends Entity {
     animatedSprite.animationSpeed = 0.05;
     animatedSprite.play();
 
+    // Weapon test
+    // TODO: Cleanup
+    const weapon = await Assets.loadBundle('weapon');
+    const test = new Sprite(weapon.background);
+    test.x = 10;
+    test.y = (animatedSprite.height - test.height) / 2;
+
     this.sprite = animatedSprite;
-    stage.addChild(animatedSprite);
+    stage.addChild(animatedSprite, test);
+  }
+
+  private handleMouseClick(event: MouseEvent) {
+    const bullet = new Bullet(this.sprite.x + this.sprite.width / 2, this.sprite.y);
+    this.bullets.push(bullet);
+
+    // TODO: Add the bullet graphics to the stage
+    GameEnvironment.getGame().viewportManager.cameraContainer.addChild(bullet.getGraphics());
   }
 
   private flipSprite() {
@@ -71,6 +98,10 @@ export default class Character extends Entity {
     if (this.keys['ArrowLeft']) this.moveLeft(delta);
     if (this.keys['ArrowRight']) this.moveRight(delta);
 
+    // TODO: in main class
+    this.bullets.forEach((bullet) => {
+      bullet.update(delta);
+    });
 
     // if( GameEnvironment.getGame().tilemapManager.isCollidingWithTile(this.sprite.x + this.sprite.width, this.sprite.y)) {
     //   console.log('bl')
