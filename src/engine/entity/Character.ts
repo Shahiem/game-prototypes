@@ -1,9 +1,12 @@
+import GameEnvironment from '../GameEnvironment';
 import Entity from './Entity';
 import { Assets, AnimatedSprite, Rectangle, Texture, BaseTexture } from 'pixi.js';
 
 export default class Character extends Entity {
   private keys: { [key: string]: boolean } = {};
   private sprite: any;
+  private x: number = 0;
+  private y: number = 0;
   private walkingSpeed: number = 5;
 
   constructor() {
@@ -63,14 +66,30 @@ export default class Character extends Entity {
   }
 
   public update(delta: number) {
-    if (this.keys['ArrowLeft']) {
-      this.sprite.x -= this.walkingSpeed * delta;
-      if (this.sprite.scale.x > 0) this.flipSprite();
-    }
+    if (!this.sprite) return;
 
-    if (this.keys['ArrowRight']) {
-      this.sprite.x += this.walkingSpeed * delta;
-      if (this.sprite.scale.x < 0) this.flipSprite();
-    }
+    if (this.keys['ArrowLeft']) this.moveLeft(delta);
+    if (this.keys['ArrowRight']) this.moveRight(delta);
+
+
+    // if( GameEnvironment.getGame().tilemapManager.isCollidingWithTile(this.sprite.x + this.sprite.width, this.sprite.y)) {
+    //   console.log('bl')
+    //   this.sprite.x = this.sprite.x - this.sprite.width;
+
+    // }
   }
+
+  private moveLeft(delta: number) {
+    this.sprite.x -= this.walkingSpeed * delta;
+
+    if (this.sprite.getBounds().x < 0) this.sprite.x = 0;
+  }
+
+  private moveRight(delta: number) {
+    this.sprite.x += this.walkingSpeed * delta;
+
+    const maxX = GameEnvironment.getGame().tilemapManager.getTilemapWidth() - this.sprite.getBounds().width;
+    if (this.sprite.getBounds().x > maxX) this.sprite.x = maxX;
+  }
+
 }

@@ -1,39 +1,23 @@
-import Splash from './scenes/Splash';
-import Play from './scenes/Play';
-import { Container } from 'pixi.js';
+import EntityManager from './managers/EntityManager';
+import TilemapManager from './managers/TilemapManager';
+import ViewportManager from './managers/ViewportManager';
 
-export default class Game extends Container {
+export default class Game {
+  public entityManager: EntityManager;
+  public tilemapManager: TilemapManager;
+  public viewportManager: ViewportManager;
 
-  static currentScene: any = null;
+  constructor() {
+    const matrix = [
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ];
 
-  constructor(view: any) {
-    super();
-
-    document.body.appendChild(view);
-  }
-
-  async start() {
-    await Promise.all([
-      await this.switchScene(Splash),
-      await Game.currentScene.finish,
-      await this.switchScene(Play),
-    ]);
-  }
-
-  static getGame() {
-    return this.currentScene;
-  }
-
-  protected switchScene(constructor: any) {
-    this.removeChild(Game.currentScene);
-    Game.currentScene = new constructor();
-    this.addChild(Game.currentScene);
-
-    return Game.currentScene.onCreated();
-  }
-
-  public onResize() {
-    if (Game.currentScene === null) return;
-    Game.currentScene.onResize();
+    this.entityManager = new EntityManager();
+    this.viewportManager = new ViewportManager();
+    this.tilemapManager = new TilemapManager(matrix, 20);
   }
 }

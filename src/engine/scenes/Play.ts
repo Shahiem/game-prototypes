@@ -1,29 +1,37 @@
+import GameEnvironment from '../GameEnvironment';
 import Character from '../entity/Character';
-import EntityManager from '../managers/EntityManager';
+import NPC from '../entity/NPC';
 import Scene from './Scene';
 import * as PIXI from 'pixi.js';
-
 export default class Play extends Scene {
 
-  public entityManager: any;
+  tilemap: any;
 
   constructor() {
     super();
 
     this.sortableChildren = true;
     this.sortDirty = true;
-
-    this.entityManager = new EntityManager();
-
     this.onStart();
   }
 
   private async onStart() {
-    const character = new Character();
-    this.entityManager.add(character);
-    this.entityManager.preload();
-    this.entityManager.draw(this);
+    GameEnvironment.getGame().viewportManager.setMainStage(this);
+    GameEnvironment.getGame().viewportManager.setScale(2);
 
-    PIXI.Ticker.shared.add((delta: number) => this.entityManager.update(delta));
+    const character = new Character();
+    const npc = new NPC();
+
+    // GameEnvironment.getGame().entityManager.add(character);
+    GameEnvironment.getGame().entityManager.add(npc);
+
+    GameEnvironment.getGame().tilemapManager.createTiles(GameEnvironment.getGame().viewportManager.cameraContainer);
+
+    GameEnvironment.getGame().entityManager.preload();
+    GameEnvironment.getGame().entityManager.draw(GameEnvironment.getGame().viewportManager.cameraContainer);
+
+    GameEnvironment.getGame().viewportManager.setCenter();
+
+    PIXI.Ticker.shared.add((delta: number) => GameEnvironment.getGame().entityManager.update(delta));
   }
 }

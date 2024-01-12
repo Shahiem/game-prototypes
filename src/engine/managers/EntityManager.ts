@@ -1,27 +1,27 @@
 export default class EntityManager {
-  entities: any[];
+  public entities: any[];
 
   constructor() {
     this.entities = [];
   }
 
-  add(entity: any) {
+  public add(entity: any) {
     this.entities.push(entity);
   }
 
-  preload() {
+  public preload() {
     for (const entity of this.entities) {
       entity.preload();
     }
   }
 
-  update(delta: number) {
+  public update(delta: number) {
     for (const entity of this.entities) {
       entity.update(delta);
     }
   }
 
-  draw(stage) {
+  public draw(stage: any) {
     for (const entity of this.entities) {
       entity.draw(stage);
     }
