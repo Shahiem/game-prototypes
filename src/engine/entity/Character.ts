@@ -34,8 +34,8 @@ export default class Character extends Entity {
         {
           name: 'load-screen',
           assets: [
-            { alias: 'background', src: 'assets/character/idle.png' },
-            { alias: 'json', src: 'assets/character/sprite.json' },
+            { alias: 'background', src: 'assets/character/idle/sprite.png' },
+            { alias: 'json', src: 'assets/character/idle/sprite.json' },
           ],
         },
       ],
